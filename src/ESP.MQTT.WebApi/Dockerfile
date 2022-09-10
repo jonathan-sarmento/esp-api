@@ -14,7 +14,7 @@ RUN dotnet publish --no-restore -c Release -o out
 
 FROM base AS final
 WORKDIR ./src
-COPY --from=publish ./src .
+COPY --from=publish ./src/ESP.MQTT.WebApi/out .
 # Padrão de container ASP.NET
 # ENTRYPOINT ["dotnet", "CarterAPI.dll"]
 # Opção utilizada pelo Heroku
