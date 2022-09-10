@@ -1,20 +1,17 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS base
+WORKDIR ./src/ESP.MQTT.WebApi
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["src/ESP.MQTT.WebApi/ESP.MQTT.WebApi.csproj", "ESP.MQTT.WebApi/"]
-RUN dotnet restore "src/ESP.MQTT.WebApi/ESP.MQTT.WebApi.csproj"
-COPY . .
-WORKDIR "/src/ESP.MQTT.WebApi"
-RUN dotnet build "ESP.MQTT.WebApi.csproj" -c Release -o /app/build
+COPY *.csproj ./
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "ESP.MQTT.WebApi.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY ./*.csproj ./
+RUN true
+COPY . .	
+RUN dotnet publish -c Release -o out
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ESP.MQTT.WebApi.dll"]
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR ./src
+COPY --from=build ./src/ESP.MQTT.WebApi/out .
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet ESP.MQTT.WebApi.dll
