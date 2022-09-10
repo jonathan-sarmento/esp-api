@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE2B93B0-6694-4B35-9913-94B8296E402A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FE40D5D3-7AA7-4BE5-BB85-8352005BB67C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESP.MQTT.WebApi", "src\ESP.MQTT.WebApi\ESP.MQTT.WebApi.csproj", "{A6514145-4B82-4EBA-8FBA-1BEBA131B5F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESP.MQTT.WebApi.UnitTest", "test\ESP.MQTT.WebApi.UnitTest\ESP.MQTT.WebApi.UnitTest.csproj", "{CF5C7FAD-79F1-4B19-B4D2-0EEB47987F85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A6514145-4B82-4EBA-8FBA-1BEBA131B5F9} = {DE2B93B0-6694-4B35-9913-94B8296E402A}
+		{CF5C7FAD-79F1-4B19-B4D2-0EEB47987F85} = {FE40D5D3-7AA7-4BE5-BB85-8352005BB67C}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6514145-4B82-4EBA-8FBA-1BEBA131B5F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6514145-4B82-4EBA-8FBA-1BEBA131B5F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6514145-4B82-4EBA-8FBA-1BEBA131B5F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6514145-4B82-4EBA-8FBA-1BEBA131B5F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF5C7FAD-79F1-4B19-B4D2-0EEB47987F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF5C7FAD-79F1-4B19-B4D2-0EEB47987F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF5C7FAD-79F1-4B19-B4D2-0EEB47987F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF5C7FAD-79F1-4B19-B4D2-0EEB47987F85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
