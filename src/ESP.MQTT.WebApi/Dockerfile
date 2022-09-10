@@ -1,17 +1,21 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS base
-WORKDIR ./src/ESP.MQTT.WebApi
-
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY ./*.csproj ./
-RUN true
-COPY . .	
-RUN dotnet publish -c Release -o out
-
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR ./src
-COPY --from=build ./src/ESP.MQTT.WebApi/out .
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR ./src/ESP.MQTT.WebApi
+COPY . .
+RUN dotnet restore 
+RUN dotnet build --no-restore -c Release -o out
+
+FROM build AS publish
+RUN dotnet publish --no-restore -c Release -o out
+
+FROM base AS final
+WORKDIR ./src
+COPY --from=publish ./src .
+# Padrão de container ASP.NET
+# ENTRYPOINT ["dotnet", "CarterAPI.dll"]
+# Opção utilizada pelo Heroku
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet ESP.MQTT.WebApi.dll
