@@ -1,6 +1,12 @@
 ﻿using System.Globalization;
 using ESP.MQTT.WebApi.Controllers;
+using ESP.MQTT.WebApi.Infrastructure;
+using ESP.MQTT.WebApi.Infrastructure.Abstractions;
+using ESP.MQTT.WebApi.Infrastructure.Repositories;
+using ESP.MQTT.WebApi.Services;
+using ESP.MQTT.WebApi.Services.Abstractions;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -15,20 +21,21 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        // services.AddDbContext(options => options.ConnectionString = Configuration.GetConnectionString("MySQLConnectionString"));
-        // services.AddRepository();
-        // services.AddAutoMapper();
+        services.AddDbContext<PostgreDbContext>(options => 
+            options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? Configuration.GetValue<string>("CONNECTION_STRING")));
         
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .CreateLogger();
+        
+        services.AddSingleton<IMqttHandler, MqttHandler>();
 
-        services.ConfigureMqttClient().GetAwaiter();
+        services.AddScoped<ITopicRepository, TopicRepository>();
+        
         services.AddControllers();
         services.AddSwaggerGen(c =>
         {
@@ -36,8 +43,7 @@ public class Startup
         });
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ITopicRepository topicRepository)
     {
         if (env.IsDevelopment())
         {
@@ -45,6 +51,8 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ESP.MQTT.Api v1"));
         }
+        
+        app.ConfigureMqttClient(app.ApplicationServices, topicRepository).Wait();
         
         app.UseHttpsRedirection();
 
