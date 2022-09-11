@@ -8,6 +8,7 @@ on:
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
   APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+  CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
   
 jobs:
   build:
